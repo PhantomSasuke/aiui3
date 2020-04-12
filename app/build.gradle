@@ -3,7 +3,9 @@ apply plugin: 'com.chaquo.python'
 
 android {
     compileSdkVersion 29
-
+    aaptOptions {
+        noCompress "tflite"
+    }
 
     defaultConfig {
         applicationId "com.example.aiui3"

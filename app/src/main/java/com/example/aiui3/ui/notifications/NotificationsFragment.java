@@ -18,15 +18,18 @@ import androidx.lifecycle.LifecycleOwner;
 
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.Context;
 
 import android.content.Intent;
 import android.content.pm.PackageManager;
 
+import android.content.res.AssetFileDescriptor;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 
+import android.graphics.Color;
 import android.graphics.Matrix;
 
 import android.net.Uri;
@@ -56,13 +59,19 @@ import com.example.aiui3.R;
 import com.example.aiui3.ui.dashboard.DashboardFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
+import org.tensorflow.lite.Interpreter;
+import org.tensorflow.lite.gpu.GpuDelegate;
+
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.nio.MappedByteBuffer;
+import java.nio.channels.FileChannel;
 
 import static android.app.Activity.RESULT_OK;
 
@@ -220,7 +229,7 @@ public class NotificationsFragment extends Fragment implements LifecycleOwner {
         return true;
     }
 
-    private void line(File file, Context c, boolean b){
+    private void line(File file, Context c, boolean b, MainActivity a) throws IOException {
         Bitmap bmp;
         if (b)
             bmp = rotate(file);
@@ -231,9 +240,10 @@ public class NotificationsFragment extends Fragment implements LifecycleOwner {
         bmp.compress(Bitmap.CompressFormat.PNG, 100, stream);
         byte[] bytes = stream.toByteArray();
         Python py = Python.getInstance();
+        float[][] f = model(bmp, a);
         PyObject pyf = py.getModule("lines");
-        PyObject pym = pyf.callAttr("addLines", bytes);
-        PyObject pym2 = pyf.callAttr("onlyLines", bytes);
+        PyObject pym = pyf.callAttr("addLines", bytes, f);
+        PyObject pym2 = pyf.callAttr("onlyLines", bytes, f);
         byte[] bytes2 = pym.toJava(byte[].class);
         byte[] bytes3 = pym2.toJava(byte[].class);
         DashboardFragment.linesBitMap = BitmapFactory.decodeByteArray(bytes2, 0, bytes2.length);
@@ -280,7 +290,11 @@ public class NotificationsFragment extends Fragment implements LifecycleOwner {
             DashboardFragment.onlyLinesBitMap = null;
             DashboardFragment.linesBitMap = null;
             f = files[0];
-            line(f, c, b);
+            try {
+                line(f, c, b, activity);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
             return null;
         }
 
@@ -387,18 +401,52 @@ public class NotificationsFragment extends Fragment implements LifecycleOwner {
         }
 
     }
-    private Bitmap getResizedBitmap(Bitmap image, int maxSize) {
-        int width = image.getWidth();
-        int height = image.getHeight();
 
-        float bitmapRatio = (float)width / (float) height;
-        if (bitmapRatio > 0) {
-            width = maxSize;
-            height = (int) (width / bitmapRatio);
-        } else {
-            height = maxSize;
-            width = (int) (height * bitmapRatio);
+    private float[][] model(Bitmap bitmape, MainActivity a) throws IOException {
+        GpuDelegate delegate = new GpuDelegate();
+        Interpreter.Options options = (new Interpreter.Options()).addDelegate(delegate);
+        String modelFile="mymodel.tflite";
+        Interpreter interpreter = new Interpreter(loadModelFile(a,modelFile), options);
+
+        Bitmap bitmap = Bitmap.createScaledBitmap(bitmape, 120, 160, true);
+        int x = bitmap.getWidth();
+        int y = bitmap.getHeight();
+        float[][][][] input = new float[1][160][120][3];
+        for (int i = 0; i < x; i++){
+            for (int j = 0; j < y; j++){
+                int colour = bitmap.getPixel(i, j);
+
+                float red = Color.red(colour);
+                float green = Color.green(colour);
+                float blue = Color.blue(colour);
+                input[0][j][i][0] = red;
+                input[0][j][i][1] = green;
+                input[0][j][i][2] = blue;
+
+            }
         }
-        return Bitmap.createScaledBitmap(image, width, height, true);
+
+        try {
+
+            float[][] output = new float[1][155];
+            interpreter.run(input, output);
+            return output;
+        }
+
+        catch (Exception e){
+            e.printStackTrace();
+            return null;
+        }
+
     }
+    private MappedByteBuffer loadModelFile(Activity activity, String MODEL_FILE) throws IOException {
+        AssetFileDescriptor fileDescriptor = activity.getAssets().openFd(MODEL_FILE);
+        FileInputStream inputStream = new FileInputStream(fileDescriptor.getFileDescriptor());
+        FileChannel fileChannel = inputStream.getChannel();
+        long startOffset = fileDescriptor.getStartOffset();
+        long declaredLength = fileDescriptor.getDeclaredLength();
+        return fileChannel.map(FileChannel.MapMode.READ_ONLY, startOffset, declaredLength);
+    }
+
+
 }

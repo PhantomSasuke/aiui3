@@ -98,28 +98,24 @@ def plot(im, data):
 
 
 
-def addLines(x):
+def addLines(x, y):
     bytez = bytes(x)
     im = Image.open(io.BytesIO(bytez))
-    model = tf.keras.models.load_model(join(dirname(__file__), 'nhwc_model.h5'))
-    new_img = im.resize((120, 160))
-    inputarray = np.asarray([asarray(new_img)])
-    y_pred = model.predict(inputarray,verbose=1)
-    im = plot(new_img, y_pred[0])
+    y = np.asarray(y)
+    new_img = im.resize((360, 480))
+    im = plot(new_img, 3*np.array(y[0]))
     imgByteArr = io.BytesIO()
     im.save(imgByteArr, format='PNG')
     imgByteArr = imgByteArr.getvalue()
     return imgByteArr
 
-def onlyLines(x):
+def onlyLines(x, y):
     bytez = bytes(x)
     im = Image.open(io.BytesIO(bytez))
-    im = im.convert("RGBA")
-    datas = im.getdata()
-    newData = [(255, 255, 255, 0) for i in datas]
-    im.putdata(newData)
-    draw = ImageDraw.Draw(im)
-    draw.line((0, 0) + im.size, width=3)
+    im = Image.new('RGB', im.size, (0, 0, 0))
+    y = np.asarray(y)
+    new_img = im.resize((360, 480))
+    im = plot(new_img, 3*np.array(y[0]))
     imgByteArr = io.BytesIO()
     im.save(imgByteArr, format='PNG')
     imgByteArr = imgByteArr.getvalue()
