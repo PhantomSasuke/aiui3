@@ -24,6 +24,7 @@ import com.example.aiui3.R;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public class HomeFragment extends Fragment {
     ProgressBar pb;
@@ -59,21 +60,23 @@ public class HomeFragment extends Fragment {
             File directory = new File(Environment.getExternalStorageDirectory() + "/aiuiImages");
             File[] files = directory.listFiles();
             if (files != null) {
-                for (File f : files) {
-                    Bitmap bitmap = new ImageSaver(getContext()).
-                            setFileName("myImage.png").
-                            setDirectoryName(f.getName()).
-                            load();
-                    Bitmap bitmap2 = new ImageSaver(getContext()).
-                            setFileName("myImage2.png").
-                            setDirectoryName(f.getName()).
-                            load();
-                    Bitmap bitmap3 = new ImageSaver(getContext()).
-                            setFileName("myImage3.png").
-                            setDirectoryName(f.getName()).
-                            load();
+                if (!Arrays.asList(files).contains(null)) {
+                    for (File f : files) {
+                        Bitmap bitmap = new ImageSaver(getContext()).
+                                setFileName("myImage.png").
+                                setDirectoryName(f.getName()).
+                                load();
+                        Bitmap bitmap2 = new ImageSaver(getContext()).
+                                setFileName("myImage2.png").
+                                setDirectoryName(f.getName()).
+                                load();
+                        Bitmap bitmap3 = new ImageSaver(getContext()).
+                                setFileName("myImage3.png").
+                                setDirectoryName(f.getName()).
+                                load();
 
-                    bList.add(new Pair<Pair<Bitmap, Bitmap>, Bitmap>(new Pair<Bitmap, Bitmap>(bitmap, bitmap2), bitmap3));
+                        bList.add(new Pair<Pair<Bitmap, Bitmap>, Bitmap>(new Pair<Bitmap, Bitmap>(bitmap, bitmap2), bitmap3));
+                    }
                 }
             }
             sl = new slAdapter(bList);
