@@ -17,9 +17,39 @@
         app:layout_constraintBottom_toBottomOf="parent"
         android:visibility="visible"
         />
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/savedList"
-        android:scrollbars="vertical"
+    <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="match_parent"
+
+        app:cardCornerRadius="20dp"
+        android:innerRadius="0dp"
+        android:shape="ring"
+        android:thicknessRatio="1.9"
+        >
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Load an Image"
+                android:textSize="26sp"
+                android:textColor="#212121"
+                android:layout_gravity="left"
+                android:layout_margin="20dp"
+                android:fontFamily="@font/less"
+                android:padding="10dp"/>
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/savedList"
+                android:scrollbars="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"/>
+        </LinearLayout>
+    </androidx.cardview.widget.CardView>
+
+
+
 </androidx.constraintlayout.widget.ConstraintLayout>

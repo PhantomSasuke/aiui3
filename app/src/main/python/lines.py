@@ -101,7 +101,7 @@ def plot(im, data):
 def addLines(x):
     bytez = bytes(x)
     im = Image.open(io.BytesIO(bytez))
-    model = tf.keras.models.load_model(join(dirname(__file__), 'model.h5'))
+    model = tf.keras.models.load_model(join(dirname(__file__), 'nhwc_model.h5'))
     new_img = im.resize((120, 160))
     inputarray = np.asarray([asarray(new_img)])
     y_pred = model.predict(inputarray,verbose=1)

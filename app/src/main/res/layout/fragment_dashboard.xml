@@ -3,41 +3,72 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@drawable/bg_grad"
     tools:context=".ui.dashboard.DashboardFragment">
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:id="@+id/noimg">
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="No Image Chosen"
-            android:textSize="30sp"
-            android:textColor="#212121"
-            android:layout_gravity="center_horizontal"
-            android:fontFamily="sans-serif-medium"
-            android:textStyle="italic"
-            android:layout_marginTop="50dp"/>
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@mipmap/selfie"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginTop="120dp"
-            android:layout_marginStart="20dp"
-            android:background="@android:color/transparent"/>
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:text="Press the camera icon to take a picture!"
-            android:textSize="30sp"
-            android:textColor="#212121"
-            android:layout_gravity="center_horizontal"
-            android:fontFamily="sans-serif-medium"
-            android:textStyle="italic"
-            android:layout_marginTop="170dp"/>
+        <androidx.cardview.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+
+            android:id="@+id/cardid"
+            app:cardCornerRadius="20dp"
+            android:innerRadius="0dp"
+            android:shape="ring"
+            android:thicknessRatio="1.9"
+            >
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_gravity="center"
+                >
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@mipmap/camera"
+                    android:layout_gravity="center_horizontal"
+                    android:background="@android:color/transparent"
+                    android:layout_marginRight="70dp"
+                    android:layout_marginLeft="70dp"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="No Image Selected"
+                    android:textSize="26sp"
+                    android:textColor="#212121"
+                    android:layout_gravity="center_horizontal"
+                    android:fontFamily="@font/less"
+                    android:padding="10dp"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:text="Swipe left to select an image"
+                    android:textSize="16sp"
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginRight="15dp"
+                    android:textColor="#212121"
+                    android:layout_gravity="center_horizontal"
+                    android:fontFamily="@font/less_light"
+                    android:padding="5dp"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:text="Swipe right to take a picture"
+                    android:textSize="16sp"
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginRight="15dp"
+                    android:textColor="#212121"
+                    android:layout_gravity="center_horizontal"
+                    android:fontFamily="@font/less_light"
+                    android:padding="5dp"/>
+            </LinearLayout>
+        </androidx.cardview.widget.CardView>
     </FrameLayout>
     <ProgressBar
         android:id="@+id/indeterminateBar"
@@ -47,33 +78,79 @@
         android:layout_marginTop="200dp"
         android:visibility="invisible"
         />
-    <ImageView
-        android:layout_centerHorizontal="true"
-        android:layout_width="360dp"
-        android:layout_height="480dp"
-        android:padding="1dp"
-        android:layout_marginTop="50dp"
-        android:cropToPadding="true"
-        android:id="@+id/img"
-        android:scaleType="fitXY"/>
-    <ToggleButton
-        android:layout_gravity="bottom|center"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textOff="Show lines only"
-        android:textOn="Show image"
-        android:layout_marginBottom="20dp"
-        android:layout_centerHorizontal="true"
-        android:layout_above="@id/linesToggle"
-        android:id="@+id/linesButton" />
-    <ToggleButton
-        android:layout_centerHorizontal="true"
-        android:layout_alignParentBottom="true"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/linesToggle"
-        android:layout_marginBottom="30dp"
-        android:textOn="Lines ON"
-        android:textOff="Lines OFF"/>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:id="@+id/imgL">
+        <androidx.cardview.widget.CardView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/cvimg"
+
+            android:layout_gravity="center_horizontal"
+            app:cardCornerRadius="20dp"
+            android:innerRadius="0dp"
+            android:shape="ring"
+            android:thicknessRatio="1.9"
+            android:layout_marginBottom="20dp">
+            <ImageView
+                android:layout_centerHorizontal="true"
+                android:layout_width="300dp"
+                android:layout_height="400dp"
+                android:padding="1dp"
+                android:cropToPadding="true"
+                android:id="@+id/img"
+                android:scaleType="fitXY"/>
+        </androidx.cardview.widget.CardView>
+        <androidx.cardview.widget.CardView
+            android:id="@+id/cvbut1"
+            android:layout_margin="10dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+
+            app:cardCornerRadius="20dp"
+            android:innerRadius="0dp"
+            android:shape="ring"
+            android:thicknessRatio="1.9"
+            >
+            <ToggleButton
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="center"
+                android:background="#f2f2f2"
+                android:fontFamily="@font/less"
+                android:textOff="Show lines only"
+                android:textOn="Show image"
+                android:layout_centerHorizontal="true"
+                android:id="@+id/linesButton" />
+
+        </androidx.cardview.widget.CardView>
+        <androidx.cardview.widget.CardView
+            android:id="@+id/cvbut2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+
+            android:layout_margin="10dp"
+            app:cardCornerRadius="20dp"
+            android:innerRadius="0dp"
+            android:shape="ring"
+            android:thicknessRatio="1.9"
+            >
+            <ToggleButton
+                android:layout_gravity="center"
+                android:layout_centerHorizontal="true"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="#f2f2f2"
+                android:fontFamily="@font/less"
+                android:id="@+id/linesToggle"
+                android:textOn="Lines ON"
+                android:textOff="Lines OFF"/>
+
+        </androidx.cardview.widget.CardView>
+    </LinearLayout>
+
 
 </RelativeLayout>
