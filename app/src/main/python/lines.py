@@ -45,7 +45,7 @@ def circle1(x1, y1, x2, y2, x3, y3, c):
     centre = np.linalg.solve(A, B)
     x, y = centre[0], centre[1]
     r = np.sqrt((x-x1)**2 + (y-y1)**2) + c
-    return (x - r, y), (x + r, y), (x, y - r)
+    return (x - r, y), (x + r, y), (x, y - r - 75)
 
 def circle2(x1, y1, x2, y2, x3, y3, c):
     A = np.array([[2*(x1 - x2), 2*(y1 - y2)], [2*(x2 - x3), 2*(y2 - y3)]])
@@ -88,6 +88,7 @@ def plot(im, data):
 
     curve1([22, 23, 24, 24, 23, 22], p, ts, draw)
     curve1([16, 17, 18, 18, 17, 16], p, ts, draw)
+    curve2([p[7], p[67], c1[2], c1[2], p[67], p[7]], ts, draw)
     curve1([37, 38, 51, 44, 45], p, ts, draw)
     curve1([44, 43, 42, 47, 67, 67, 47, 42, 43, 44], p, ts, draw)
     curve1([38, 39, 40, 46, 67, 67, 46, 40, 39, 38], p, ts, draw)
